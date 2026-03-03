@@ -1,0 +1,143 @@
+{% extends 'core/base.html' %}
+
+{% block extra_head %}
+<style>
+  .form-hero {
+    background: linear-gradient(135deg, #052e16, #166534);
+    padding: 40px 24px 60px; color: white; text-align: center;
+  }
+  .form-hero-badge {
+    display: inline-block; background: rgba(34,197,94,.15);
+    border: 1px solid rgba(34,197,94,.3); color: #86efac;
+    border-radius: 999px; padding: 4px 14px;
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; margin-bottom: 16px;
+  }
+  .form-hero h1 { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+  .form-hero p { color: #bbf7d0; font-size: 0.9rem; }
+
+  .form-outer {
+    max-width: 720px; margin: -32px auto 0;
+    padding: 0 24px 64px; position: relative; z-index: 2;
+  }
+
+  .pf-card {
+    background: white; border: 1px solid #e2e8f0;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,.08);
+  }
+
+  .pf-section {
+    padding: 28px 32px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  .pf-section:last-of-type { border-bottom: none; }
+  .pf-section-title {
+    font-size: 0.75rem; font-weight: 700; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+  }
+  .pf-section-title::after {
+    content: ''; flex: 1; height: 1px; background: #f1f5f9;
+  }
+
+  .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+  .pf-full { grid-column: 1 / -1; }
+  .pf-grid .form-group { margin-bottom: 18px; }
+
+  .price-input-wrap { position: relative; }
+  .price-prefix {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: #94a3b8; font-weight: 700; font-size: 0.95rem; pointer-events: none;
+  }
+  .price-input-wrap input { padding-left: 28px !important; }
+
+  .form-footer {
+    padding: 24px 32px; background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    display: flex; gap: 12px; align-items: center;
+  }
+
+  @media (max-width: 600px) {
+    .pf-grid { grid-template-columns: 1fr; }
+    .pf-section { padding: 20px 20px; }
+    .form-footer { padding: 20px; flex-direction: column; }
+    .form-footer .btn { width: 100%; justify-content: center; }
+  }
+</style>
+{% endblock %}
+
+{% block title %}{{ action }} Product – Bristol Local Food Network{% endblock %}
+
+{% block content %}
+<div class="form-hero">
+  <div class="form-hero-badge">
+    {% if action == 'Create' %}✨ New Listing{% else %}✏️ Edit Listing{% endif %}
+  </div>
+  <h1>{{ action }} a Product</h1>
+  <p>{% if action == 'Create' %}Add a new item to your farm shop — it takes under a minute.{% else %}Update the details for this product listing.{% endif %}</p>
+</div>
+
+<div class="form-outer">
+  <form method="post">
+    {% csrf_token %}
+    <div class="pf-card">
+
+      <div class="pf-section">
+        <div class="pf-section-title">Product Info</div>
+        <div class="pf-grid">
+          {% for field in form %}
+            {% if field.name == 'name' or field.name == 'category' %}
+              <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+          {% for field in form %}
+            {% if field.name == 'description' %}
+              <div class="form-group pf-full">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="pf-section">
+        <div class="pf-section-title">Pricing &amp; Stock</div>
+        <div class="pf-grid">
+          {% for field in form %}
+            {% if field.name == 'price' %}
+              <div class="form-group">
+                {{ field.label_tag }}
+                <div class="price-input-wrap">
+                  <span class="price-prefix">£</span>
+                  {{ field }}
+                </div>
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+            {% elif field.name == 'unit' or field.name == 'stock_quantity' %}
+              <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="submit" class="btn btn-primary">
+          {% if action == 'Create' %}✓ Create Listing{% else %}✓ Save Changes{% endif %}
+        </button>
+        <a href="{% url 'producers:product_list' %}" class="btn btn-ghost">Cancel</a>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'core/base.html' %}
+
+{% block extra_head %}
+<style>
+  .products-hero {
+    background: linear-gradient(135deg, #052e16, #166534);
+    padding: 36px 24px 56px; color: white;
+  }
+  .products-hero-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+  .products-hero h1 { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; margin-bottom: 6px; }
+  .products-hero p { color: #bbf7d0; font-size: 0.9rem; }
+
+  .products-body {
+    max-width: 1200px; margin: -28px auto 0;
+    padding: 0 24px 64px; position: relative; z-index: 2;
+  }
+
+  .empty-state {
+    background: white; border: 1px solid #e2e8f0; border-radius: 20px;
+    padding: 72px 32px; text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .empty-state-emoji { font-size: 4rem; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; color: #0f172a; margin-bottom: 8px; }
+  .empty-state p { color: #64748b; margin-bottom: 24px; font-size: 0.9rem; }
+
+  .product-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  .product-card {
+    background: white; border: 1px solid #e2e8f0;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    transition: box-shadow .2s, transform .2s;
+    display: flex; flex-direction: column;
+  }
+  .product-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.1); transform: translateY(-3px); }
+
+  .product-card-header {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    padding: 20px 20px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .product-emoji { font-size: 2.5rem; }
+  .product-category-chip {
+    background: white; color: #15803d; border: 1px solid #bbf7d0;
+    border-radius: 999px; padding: 3px 12px; font-size: 0.72rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .product-card-body { padding: 16px 20px; flex: 1; }
+  .product-name { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+  .product-desc { font-size: 0.8rem; color: #64748b; line-height: 1.5; margin-bottom: 14px; }
+
+  .product-meta { display: flex; gap: 16px; align-items: center; }
+  .product-price {
+    font-size: 1.35rem; font-weight: 800; color: #16a34a;
+    font-family: 'Fraunces', serif;
+  }
+  .product-unit { font-size: 0.75rem; color: #94a3b8; font-weight: 600; }
+
+  .stock-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 700;
+  }
+  .stock-ok      { background: #dcfce7; color: #15803d; }
+  .stock-low     { background: #ffedd5; color: #c2410c; }
+  .stock-none    { background: #fee2e2; color: #dc2626; }
+
+  .product-card-footer {
+    padding: 14px 20px; border-top: 1px solid #f1f5f9;
+    display: flex; gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .product-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
+{% block title %}My Products – Bristol Local Food Network{% endblock %}
+
+{% block content %}
+<div class="products-hero">
+  <div class="products-hero-inner">
+    <div>
+      <h1>My Products 📦</h1>
+      <p>Manage your produce listings for {{ producer_profile.farm_name }}</p>
+    </div>
+    <a href="{% url 'producers:product_create' %}" class="btn btn-primary btn-lg" style="background:#22c55e;color:#052e16;border-color:transparent;box-shadow:0 4px 14px rgba(34,197,94,.4);">
+      + Add Product
+    </a>
+  </div>
+</div>
+
+<div class="products-body">
+  {% if products %}
+    <div class="product-grid">
+      {% for product in products %}
+        <div class="product-card">
+          <div class="product-card-header">
+            <div class="product-emoji">
+              {% if product.category %}
+                {% with cat=product.category.name|lower %}
+                  {% if 'vegetable' in cat or 'veg' in cat %}🥦
+                  {% elif 'fruit' in cat %}🍓
+                  {% elif 'dairy' in cat or 'milk' in cat or 'egg' in cat %}🥛
+                  {% elif 'meat' in cat %}🥩
+                  {% elif 'bread' in cat or 'bake' in cat %}🍞
+                  {% elif 'herb' in cat %}🌿
+                  {% elif 'honey' in cat %}🍯
+                  {% else %}🌱
+                  {% endif %}
+                {% endwith %}
+              {% else %}🌱
+              {% endif %}
+            </div>
+            <span class="product-category-chip">{{ product.category|default:"Uncategorised" }}</span>
+          </div>
+          <div class="product-card-body">
+            <div class="product-name">{{ product.name }}</div>
+            {% if product.description %}
+              <div class="product-desc">{{ product.description|truncatechars:80 }}</div>
+            {% endif %}
+            <div class="product-meta">
+              <div>
+                <div class="product-price">£{{ product.price }}</div>
+                <div class="product-unit">per {{ product.get_unit_display }}</div>
+              </div>
+              <div>
+                {% if product.stock_quantity == 0 %}
+                  <span class="stock-pill stock-none">● Out of stock</span>
+                {% elif product.stock_quantity < 5 %}
+                  <span class="stock-pill stock-low">⚠ {{ product.stock_quantity }} left</span>
+                {% else %}
+                  <span class="stock-pill stock-ok">✓ {{ product.stock_quantity }} in stock</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          <div class="product-card-footer">
+            <a href="{% url 'producers:product_edit' product.pk %}" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;">✏ Edit</a>
+            <form method="post" action="{% url 'producers:product_delete' product.pk %}" style="flex:1;" onsubmit="return confirm('Delete {{ product.name }}? This cannot be undone.');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm" style="width:100%;justify-content:center;">🗑 Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-emoji">🌱</div>
+      <h3>No products listed yet</h3>
+      <p>Start by adding your first product. It only takes a minute!</p>
+      <a href="{% url 'producers:product_create' %}" class="btn btn-primary btn-lg">+ Add Your First Product</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

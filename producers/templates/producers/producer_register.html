@@ -1,0 +1,105 @@
+{% extends 'core/base.html' %}
+
+{% block extra_head %}
+<style>
+  .onboard-hero {
+    background: linear-gradient(135deg, #0f2d1a, #166534);
+    color: white; padding: 48px 24px 0;
+  }
+  .onboard-hero-inner { max-width: 700px; margin: 0 auto; text-align: center; padding-bottom: 48px; }
+  .onboard-step-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3);
+    color: #86efac; border-radius: 999px;
+    padding: 5px 16px; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .onboard-hero h1 {
+    font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700;
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .onboard-hero p { color: #bbf7d0; font-size: 0.95rem; }
+
+  .onboard-body { max-width: 700px; margin: 0 auto; padding: 40px 24px 64px; }
+
+  .form-card {
+    background: white; border: 1px solid #e2e8f0;
+    border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,.08);
+    overflow: hidden;
+  }
+  .form-card-header {
+    padding: 24px 32px; background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .form-card-header-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(21,128,61,.3);
+  }
+  .form-card-header-text h2 { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+  .form-card-header-text p { font-size: 0.8rem; color: #64748b; margin-top: 2px; }
+  .form-card-body { padding: 32px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+  .form-grid .form-group { margin-bottom: 20px; }
+  .form-full { grid-column: 1 / -1; }
+
+  .form-actions {
+    display: flex; gap: 12px; align-items: center;
+    padding-top: 8px; border-top: 1px solid #f1f5f9; margin-top: 8px;
+  }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-card-body { padding: 24px; }
+    .onboard-hero { padding: 36px 24px 0; }
+  }
+</style>
+{% endblock %}
+
+{% block title %}Set Up Producer Profile – Bristol Local Food Network{% endblock %}
+
+{% block content %}
+<div class="onboard-hero">
+  <div class="onboard-hero-inner">
+    <div class="onboard-step-badge">Step 2 of 2 · Almost there!</div>
+    <h1>Tell us about your farm 🌿</h1>
+    <p>Customers love knowing who grows their food. Fill in your farm details to complete your producer profile.</p>
+  </div>
+</div>
+
+<div class="onboard-body">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-header-icon">🏡</div>
+        <div class="form-card-header-text">
+          <h2>Farm &amp; Business Details</h2>
+          <p>This will appear on your public producer profile</p>
+        </div>
+      </div>
+      <div class="form-card-body">
+        <div class="form-grid">
+          {% for field in form %}
+            <div class="form-group {% if field.name == 'description' or field.name == 'farm_address' %}form-full{% endif %}">
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.errors %}
+                <ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Save &amp; Go to Dashboard &rarr;</button>
+          <a href="{% url 'home' %}" class="btn btn-ghost">Skip for now</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

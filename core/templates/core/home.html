@@ -1,0 +1,359 @@
+{% extends 'core/base.html' %}
+
+{% block extra_head %}
+<style>
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0f2d1a 0%, #1a4d2e 40%, #166534 100%);
+    color: white;
+    padding: 80px 24px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2322c55e' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: .5;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 64px; align-items: center;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3);
+    color: #86efac; border-radius: 999px;
+    padding: 5px 14px; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-tag span { width: 6px; height: 6px; background: #4ade80; border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 700; line-height: 1.1;
+    margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: italic; color: #86efac; }
+  .hero p {
+    font-size: 1.1rem; color: #bbf7d0; line-height: 1.7;
+    margin-bottom: 36px; max-width: 480px;
+  }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-actions .btn-hero-primary {
+    background: #22c55e; color: #052e16;
+    font-weight: 700; font-size: 0.95rem;
+    padding: 13px 28px; border-radius: 10px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s; box-shadow: 0 4px 20px rgba(34,197,94,.4);
+  }
+  .hero-actions .btn-hero-primary:hover { background: #4ade80; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,197,94,.5); }
+  .hero-actions .btn-hero-outline {
+    background: transparent; color: white;
+    font-weight: 600; font-size: 0.95rem;
+    padding: 13px 28px; border-radius: 10px;
+    text-decoration: none; border: 1.5px solid rgba(255,255,255,.35);
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all .2s;
+  }
+  .hero-actions .btn-hero-outline:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.6); }
+
+  .hero-visual {
+    display: flex; justify-content: center; align-items: center;
+  }
+  .hero-card-stack {
+    position: relative; width: 320px; height: 280px;
+  }
+  .hcard {
+    position: absolute; background: white;
+    border-radius: 16px; padding: 18px 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.35);
+    min-width: 200px;
+  }
+  .hcard-1 { top: 0; left: 0; transform: rotate(-4deg); }
+  .hcard-2 { top: 60px; left: 60px; transform: rotate(2deg); z-index: 2; }
+  .hcard-3 { top: 30px; right: 0; transform: rotate(5deg); z-index: 1; }
+  .hcard-emoji { font-size: 1.8rem; margin-bottom: 6px; }
+  .hcard-name { font-weight: 700; color: #0f172a; font-size: 0.9rem; }
+  .hcard-price { color: #16a34a; font-weight: 700; font-size: 1.1rem; margin-top: 2px; }
+  .hcard-farm { color: #94a3b8; font-size: 0.75rem; margin-top: 4px; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: white; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0;
+    padding: 28px 24px;
+  }
+  .stats-bar-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 24px;
+  }
+  .stats-bar-item { text-align: center; }
+  .stats-bar-num {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem; font-weight: 700; color: #16a34a;
+    line-height: 1;
+  }
+  .stats-bar-label { font-size: 0.8rem; color: #64748b; font-weight: 600; margin-top: 4px; }
+
+  /* ── FEATURES ── */
+  .section { padding: 72px 24px; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-title {
+    text-align: center; margin-bottom: 48px;
+  }
+  .section-title .eyebrow {
+    display: inline-block; color: #16a34a; font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+  }
+  .section-title h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; color: #0f172a;
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .section-title p { color: #64748b; font-size: 1rem; max-width: 520px; margin: 0 auto; }
+
+  .features-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .feature-card {
+    background: white; border: 1px solid #e2e8f0;
+    border-radius: 16px; padding: 28px;
+    transition: box-shadow .2s, transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  }
+  .feature-card:hover { box-shadow: 0 12px 30px rgba(0,0,0,.1); transform: translateY(-4px); }
+  .feature-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 18px;
+  }
+  .icon-green  { background: #dcfce7; }
+  .icon-amber  { background: #fef9c3; }
+  .icon-blue   { background: #dbeafe; }
+  .icon-purple { background: #ede9fe; }
+  .feature-card h3 {
+    font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 600;
+    color: #0f172a; margin-bottom: 8px;
+  }
+  .feature-card p { color: #64748b; font-size: 0.875rem; line-height: 1.7; }
+
+  /* ── HOW IT WORKS ── */
+  .hiw { background: #f0fdf4; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0; counter-reset: step;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute; top: 28px; left: 10%; right: 10%;
+    height: 2px; background: linear-gradient(90deg, #bbf7d0, #16a34a, #bbf7d0);
+    z-index: 0;
+  }
+  .step {
+    text-align: center; padding: 0 20px 32px;
+    position: relative; z-index: 1;
+  }
+  .step-num {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 14px rgba(21,128,61,.4);
+  }
+  .step h4 { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 0.95rem; }
+  .step p  { color: #64748b; font-size: 0.85rem; line-height: 1.6; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, #052e16, #166534);
+    color: white; text-align: center; padding: 72px 24px;
+  }
+  .cta-section h2 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .cta-section p { color: #bbf7d0; font-size: 1rem; margin-bottom: 36px; }
+  .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── LOGGED IN HERO ── */
+  .dash-hero {
+    background: linear-gradient(135deg, #0f2d1a, #1a4d2e);
+    color: white; padding: 48px 24px;
+  }
+  .dash-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .dash-hero h1 { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+  .dash-hero p { color: #bbf7d0; margin-bottom: 24px; }
+
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { display: none; }
+    .steps-grid::before { display: none; }
+    .hero { padding: 60px 24px 72px; }
+  }
+</style>
+{% endblock %}
+
+{% block title %}Bristol Local Food Network — Farm to Table{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <!-- AUTHENTICATED: quick dashboard -->
+  <div class="dash-hero">
+    <div class="dash-hero-inner">
+      <h1>Welcome back, {{ user.username }} 👋</h1>
+      <p>You're logged in as <strong>{{ user.profile.role }}</strong>. Ready to manage your produce?</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="{% url 'producers:dashboard' %}" class="btn-hero-primary" style="background:#22c55e;color:#052e16;font-weight:700;padding:12px 24px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">🌿 Go to Dashboard</a>
+        <a href="{% url 'producers:product_create' %}" class="btn-hero-outline" style="background:transparent;color:white;border:1.5px solid rgba(255,255,255,.4);padding:12px 24px;border-radius:10px;text-decoration:none;">+ Add Product</a>
+      </div>
+    </div>
+  </div>
+
+{% else %}
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-tag"><span></span>Bristol's Local Food Movement</div>
+        <h1>Fresh from the farm,<br><em>straight to your table.</em></h1>
+        <p>Bristol Local Food Network connects passionate local producers with customers who care about where their food comes from. Support your community, eat seasonally, live well.</p>
+        <div class="hero-actions">
+          <a href="{% url 'register' %}" class="btn-hero-primary">🌿 Start Selling &rarr;</a>
+          <a href="{% url 'login' %}" class="btn-hero-outline">Browse Produce</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card-stack">
+          <div class="hcard hcard-1">
+            <div class="hcard-emoji">🥕</div>
+            <div class="hcard-name">Organic Carrots</div>
+            <div class="hcard-price">£2.50/kg</div>
+            <div class="hcard-farm">Avon Valley Farm</div>
+          </div>
+          <div class="hcard hcard-2">
+            <div class="hcard-emoji">🍓</div>
+            <div class="hcard-name">Strawberries</div>
+            <div class="hcard-price">£4.00/punnet</div>
+            <div class="hcard-farm">Redland Growers</div>
+          </div>
+          <div class="hcard hcard-3">
+            <div class="hcard-emoji">🥚</div>
+            <div class="hcard-name">Free Range Eggs</div>
+            <div class="hcard-price">£3.50/dozen</div>
+            <div class="hcard-farm">Clifton Hens Co.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="stats-bar-item">
+        <div class="stats-bar-num">120+</div>
+        <div class="stats-bar-label">Local Producers</div>
+      </div>
+      <div class="stats-bar-item">
+        <div class="stats-bar-num">2,400+</div>
+        <div class="stats-bar-label">Customers Served</div>
+      </div>
+      <div class="stats-bar-item">
+        <div class="stats-bar-num">350+</div>
+        <div class="stats-bar-label">Seasonal Products</div>
+      </div>
+      <div class="stats-bar-item">
+        <div class="stats-bar-num">Bristol</div>
+        <div class="stats-bar-label">Based &amp; Proud</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="section" style="background: white;">
+    <div class="section-inner">
+      <div class="section-title">
+        <div class="eyebrow">Why Bristol Local Food?</div>
+        <h2>Everything a local producer needs</h2>
+        <p>A dedicated platform built for Bristol farmers, growers and food artisans to thrive.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon icon-green">🌱</div>
+          <h3>Easy Product Listings</h3>
+          <p>List your produce in seconds. Add prices, stock, and categories to help customers find exactly what they need.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-amber">📦</div>
+          <h3>Order Management</h3>
+          <p>View incoming orders as they arrive, track fulfilment status, and keep customers in the loop with ease.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-blue">🗺️</div>
+          <h3>Local Community First</h3>
+          <p>Every sale stays in Bristol. Build a loyal local customer base and reduce food miles for a greener city.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon icon-purple">💷</div>
+          <h3>Fair &amp; Transparent</h3>
+          <p>Straightforward pricing with no hidden fees. Know exactly what you earn from every sale you make.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section hiw">
+    <div class="section-inner">
+      <div class="section-title">
+        <div class="eyebrow">Getting Started</div>
+        <h2>Up and selling in minutes</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h4>Create your account</h4>
+          <p>Register in seconds with your name and email. No complicated setup required.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h4>Set up your farm profile</h4>
+          <p>Tell customers about your farm, your story, and the produce you grow.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h4>List your products</h4>
+          <p>Add products with prices, stock levels, and categories so customers can browse easily.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h4>Start receiving orders</h4>
+          <p>Customers find your produce, place orders, and you fulfil them. Simple as that.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Ready to bring your farm online?</h2>
+    <p>Join Bristol's fastest-growing local food community today. It's free to get started.</p>
+    <div class="cta-actions">
+      <a href="{% url 'register' %}" class="btn-hero-primary" style="background:#22c55e;color:#052e16;font-weight:700;padding:14px 32px;border-radius:12px;text-decoration:none;font-size:1rem;">🌿 Register as a Producer</a>
+      <a href="{% url 'login' %}" class="btn-hero-outline" style="background:transparent;color:white;border:1.5px solid rgba(255,255,255,.4);padding:14px 32px;border-radius:12px;text-decoration:none;font-size:1rem;">I already have an account</a>
+    </div>
+  </section>
+
+{% endif %}
+{% endblock %}
