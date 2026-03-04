@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <!-- Load core.css for card styles (home card) -->
+    <link rel="stylesheet" href="{% static 'css/core.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Welcome to Bristol Food Network</h2>
+    <p style="margin: 1.5rem 0;">Your local food marketplace connecting producers and customers.</p>
+    <p>Product listings coming soon!</p>
+</div>
+{% endblock %}

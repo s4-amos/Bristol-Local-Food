@@ -1,20 +1,50 @@
 # Python
 __pycache__/
 *.py[cod]
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
 *.sqlite3
 db.sqlite3
-.env
+
+# Virtual environments
 venv/
 env/
+.venv/
+ENV/
+env.bak/
 
 # Django
 *.log
 local_settings.py
+*.pot
+*.po
+*.mo
 media/
+staticfiles/
+static_root/
 
-# VS Code
-.vscode/
-*.code-workspace
+# Environment variables
+.env
+.env.local
+.env.production
 
 # Docker
 *.pid
+docker-compose.override.yml
+
+# IDE / editors
+.vscode/
+*.code-workspace
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Project specific
