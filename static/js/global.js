@@ -56,3 +56,22 @@ if (navLinks) {
         });
     });
 }
+
+// ----- Register dropdown toggle -----
+
+const dropdown = document.querySelector('.nav-dropdown');
+const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+
+if (dropdown && dropdownToggle) {
+
+    // toggle dropdown when clicking Register
+    dropdownToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+    });
+
+    // close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+    });
+}

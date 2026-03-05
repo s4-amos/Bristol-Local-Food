@@ -91,6 +91,15 @@ body {
     transition: opacity 0.2s;
 }
 
+/* Fix dropdown link colors (override .navbar a) */
+.nav-dropdown-menu .nav-dropdown-item {
+    color: var(--text-color);
+}
+
+.nav-dropdown-menu .nav-dropdown-item:hover {
+    color: var(--text-color);
+}
+
 .navbar a:hover {
     color: var(--primary-color);
     opacity: 1;
@@ -108,6 +117,65 @@ body {
     flex-wrap: wrap;
     align-items: center;
     gap: 0.2rem;
+}
+
+/* ===== NAV DROPDOWN (Register) ===== */
+.nav-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-dropdown-toggle {
+    background: transparent;
+    border: none;
+    color: var(--navbar-text);
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0.3rem 0;
+    margin-left: 1.2rem;
+    opacity: 0.9;
+    font-size: inherit;
+}
+
+.nav-dropdown-toggle:hover {
+    color: var(--primary-color);
+    opacity: 1;
+}
+
+.nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;         /* was 130% */
+    left: 0;
+    margin-top: 0.5rem; /* creates spacing without hover gap */
+
+    min-width: 160px;
+    padding: 0.4rem 0;
+
+    background: var(--card-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    z-index: 999;
+}
+
+.nav-dropdown-item {
+    display: block;
+    padding: 0.55rem 0.9rem;
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-dropdown-item:hover {
+    background: var(--input-bg);
+    color: var(--text-color);
+}
+
+/* Dropdown open state */
+.nav-dropdown.open .nav-dropdown-menu {
+    display: block;
 }
 
 .theme-toggle {
@@ -284,9 +352,11 @@ p a:hover {
 }
 
 @media (max-width: 600px) {
+
     .hamburger {
         display: flex;
     }
+
     .nav-links {
         display: none;
         flex-direction: column;
@@ -296,16 +366,58 @@ p a:hover {
         margin-top: 0.5rem;
         border-top: 1px solid var(--input-border);
     }
+
     .nav-links.active {
         display: flex;
     }
+
     .nav-links a {
         margin: 0.3rem 0;
         width: 100%;
         text-align: center;
     }
+
     .theme-toggle {
         margin: 0.3rem 0 0;
+    }
+
+    /* -------- Register dropdown fixes -------- */
+
+    .nav-dropdown {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nav-dropdown-toggle {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 0;
+        background: transparent;
+        border: none;
+        color: var(--navbar-text);
+    }
+
+    .nav-dropdown-menu {
+        position: static;
+        display: block;
+        box-shadow: none;
+        border: none;
+        background: transparent;
+        padding: 0;
+        min-width: unset;
+    }
+
+    .nav-dropdown-item {
+        color: var(--navbar-text);
+        text-align: center;
+        padding: 0.4rem 0;
+    }
+
+    .nav-dropdown-item:hover {
+        background: transparent;
+        color: var(--primary-color);
     }
 }
 
