@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <!-- Load core.css for card styles (home card) -->
+    <link rel="stylesheet" href="{% static 'css/core.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card home-card">
+    <h2>Welcome to Bristol Food Network</h2>
+    <p style="margin: 1.5rem 0;">Your local food marketplace connecting producers and customers.</p>
+
+    {% if user.is_authenticated %}
+        {% if user.role == 'producer' %}
+            <p>You are logged in as a <strong>Producer</strong>.</p>
+            <div style="margin-top:1rem;">
+                <a href="{% url 'producers:dashboard' %}" class="btn">Go to Dashboard</a>
+                <a href="{% url 'producers:product_list' %}" class="btn" style="margin-left:0.5rem;">My Products</a>
+            </div>
+        {% elif user.role == 'customer' %}
+            <p>You are logged in as a <strong>Customer</strong>.</p>
+            <p style="margin-top:0.5rem;">Product listings coming soon!</p>
+        {% elif user.role == 'admin' %}
+            <p>You are logged in as an <strong>Admin</strong>.</p>
+            <div style="margin-top:1rem;">
+                <a href="{% url 'admin:index' %}" class="btn">Go to Admin Panel</a>
+            </div>
+        {% endif %}
+    {% else %}
+        <p>Product listings coming soon!</p>
+        <div style="margin-top:1rem;">
+            <a href="{% url 'login' %}" class="btn">Login</a>
+            <a href="{% url 'producers:register' %}" class="btn" style="margin-left:0.5rem;">Register as Producer</a>
+            <a href="{% url 'customer_register' %}" class="btn" style="margin-left:0.5rem;">Register as Customer</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

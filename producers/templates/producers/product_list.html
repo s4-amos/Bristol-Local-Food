@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>My Products</h2>
+    <a href="{% url 'producers:product_add' %}" class="btn">+ Add Product</a>
+
+    {% if products %}
+    <table style="width:100%; border-collapse:collapse; margin-top:1rem;">
+        <thead>
+            <tr style="background:#f0f0f0;">
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Image</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Name</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Category</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Price</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Unit</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Stock</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Availability</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Harvest Date</th>
+                <th style="padding:0.6rem; text-align:left; border:1px solid #ddd;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td style="padding:0.6rem; border:1px solid #ddd;">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                    {% else %}
+                        <span style="color:#aaa;">—</span>
+                    {% endif %}
+                </td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.name }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.get_category_display }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">£{{ product.price }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.get_unit_display }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.stock_quantity }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.get_availability_display }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">{{ product.harvest_date|default:"—" }}</td>
+                <td style="padding:0.6rem; border:1px solid #ddd;">
+                    <form method="post" action="{% url 'producers:product_delete' product.pk %}" style="display:inline;" onsubmit="return confirm('Delete {{ product.name }}?');">
+                        {% csrf_token %}
+                        <button type="submit" style="background:#e74c3c; color:#fff; border:none; padding:0.3rem 0.7rem; border-radius:4px; cursor:pointer;">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="margin-top:1rem;">You have no products yet. <a href="{% url 'producers:product_add' %}">Add your first product</a>.</p>
+    {% endif %}
+
+    <p style="margin-top:1.5rem;"><a href="{% url 'producers:dashboard' %}">Back to Dashboard</a></p>
+</div>
+{% endblock %}

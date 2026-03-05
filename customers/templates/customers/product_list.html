@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Bristol Local Food Marketplace</h2>
+
+    <!-- Category filter -->
+    <div style="margin:1rem 0; display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <a href="{% url 'product_browse' %}"
+           class="btn"
+           style="{% if not selected_category %}font-weight:bold;{% endif %}">
+            All
+        </a>
+        {% for value, label in categories %}
+        <a href="{% url 'product_browse' %}?category={{ value }}"
+           class="btn"
+           style="{% if selected_category == value %}font-weight:bold;{% endif %}">
+            {{ label }}
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if products %}
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.2rem; margin-top:1rem;">
+        {% for product in products %}
+        <div style="border:1px solid #ddd; border-radius:8px; overflow:hidden; background:#fff;">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                     style="width:100%; height:160px; object-fit:cover;">
+            {% else %}
+                <div style="width:100%; height:160px; background:#f5f5f5; display:flex; align-items:center; justify-content:center; color:#aaa;">
+                    No image
+                </div>
+            {% endif %}
+            <div style="padding:0.8rem;">
+                <h3 style="margin:0 0 0.3rem;">{{ product.name }}</h3>
+                <p style="margin:0 0 0.3rem; font-size:0.85rem; color:#666;">
+                    {{ product.get_category_display }} &bull; {{ product.producer.farm_name }}
+                </p>
+                {% if product.description %}
+                <p style="margin:0 0 0.5rem; font-size:0.9rem;">{{ product.description|truncatewords:15 }}</p>
+                {% endif %}
+                <p style="margin:0; font-weight:bold;">£{{ product.price }} / {{ product.get_unit_display }}</p>
+                <p style="margin:0.3rem 0 0; font-size:0.8rem; color:green;">{{ product.get_availability_display }}</p>
+                {% if product.harvest_date %}
+                <p style="margin:0.2rem 0 0; font-size:0.8rem; color:#888;">Harvested: {{ product.harvest_date }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p style="margin-top:1.5rem; color:#666;">No products available in this category right now.</p>
+    {% endif %}
+</div>
+{% endblock %}
