@@ -1,1 +1,0 @@
-// Placeholder for future app‑specific JavaScript
