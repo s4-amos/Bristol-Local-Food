@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/core.css' %}">
+<link rel="stylesheet" href="{% static 'css/producers.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Producer Registration</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label>First Name:</label>
+            <input type="text" name="first_name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Last Name:</label>
+            <input type="text" name="last_name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Farm Name:</label>
+            <input type="text" name="farm_name" placeholder="e.g., Green Valley Farm" required>
+        </div>
+
+        <div class="form-group">
+            <label>Farm Address:</label>
+            <input type="text" name="business_address">
+        </div>
+
+        <div class="form-group">
+            <label>City:</label>
+            <input type="text" name="city" placeholder="e.g., Bristol">
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number:</label>
+            <input type="tel" name="phone_number">
+        </div>
+
+        <div class="form-group">
+            <label>Farm Description:</label>
+            <textarea name="description"
+                placeholder="Tell customers about your farm"></textarea>
+        </div>
+
+        <button type="submit" class="btn">Register as Producer</button>
+
+    </form>
+
+    <p style="margin-top: 1.5rem; text-align: center;">
+        Already have an account?
+        <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+{% endblock %}
